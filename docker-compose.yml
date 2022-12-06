@@ -1,0 +1,14 @@
+services:
+    santa:
+      build: .
+      container_name: santa
+      ports:
+        - 4915:4915
+      environment:
+        PORT: 4915
+#      volumes:
+#        - SantaBot:"C:\Users\Dns user\PycharmProjects\SantaBot"
+
+      restart: always
+#    volumes:
+#      SantaBot:
