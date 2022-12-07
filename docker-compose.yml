@@ -10,5 +10,8 @@ services:
 #        - SantaBot:"C:\Users\Dns user\PycharmProjects\SantaBot"
 
       restart: always
+networks:
+  default:
+    name: santa_network
 #    volumes:
 #      SantaBot:

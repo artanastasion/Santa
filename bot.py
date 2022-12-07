@@ -46,10 +46,13 @@ async def play_start(message: types.Message):
     if message.chat.type == "private":
         recipient = await sqlite_db.check_username_recipient(message.from_user.id)
         str_recipient = ''
-        for i in range(len(recipient)):
-            str_recipient += (" @" + str(recipient[i]) + ",")
-        text = dialog.get_recipient_text + str_recipient + "\nКогда ты будешь готов поднять настроение своему другу, пиши мне /sent"
-        await bot.send_message(message.from_user.id, text=text)
+        if len(str_recipient) == 0:
+            await bot.send_message(message.from_user.id, text="Ты еще не участвуешь в игре, тебе следует прислать /participate в чате со своими друзьями")
+        else:
+            for i in range(len(recipient)):
+                str_recipient += (" @" + str(recipient[i]) + ",")
+            text = dialog.get_recipient_text + str_recipient + "\nКогда ты будешь готов поднять настроение своему другу, пиши мне /sent"
+            await bot.send_message(message.from_user.id, text=text)
 
 
 @dp.message_handler(commands=["sent"])
@@ -70,7 +73,6 @@ async def play_start(message: types.Message):
 
         for i in range(len(recipient)):
             await bot.send_message(recipient_id[i], text=dialog.sent_text_from)
-
 
 
 @dp.message_handler(commands=["help"])
