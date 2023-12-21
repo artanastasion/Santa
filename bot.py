@@ -17,7 +17,7 @@ async def on_startup(_):
 
 @dp.message_handler(commands=["participate"])
 async def cmd_start_group(message: types.Message):
-    if message.chat.type == "group":
+    if message.chat.type in ["group", "supergroup"]:
         await sqlite_db.add_user(tg_id_user=message.from_user.id, username=message.from_user.username,
                                  room=message.chat.id)
 
@@ -26,7 +26,7 @@ async def cmd_start_group(message: types.Message):
 async def cmd_start(message: types.Message):
     if message.chat.type == "private":
         await bot.send_message(message.from_user.id, text=dialog.start_private)
-    if message.chat.type == "group":
+    if message.chat.type in ["group", "supergroup"]:
         await bot.send_message(message.chat.id, text=dialog.start_group)
 
 
@@ -42,7 +42,7 @@ async def play_start(message: types.Message):
 
 
 @dp.message_handler(commands=["get_recipient"])
-async def play_start(message: types.Message):
+async def get_recipient(message: types.Message):
     if message.chat.type == "private":
         recipient = await sqlite_db.check_username_recipient(message.from_user.id)
         if not recipient:
@@ -54,7 +54,7 @@ async def play_start(message: types.Message):
 
 
 @dp.message_handler(commands=["sent"])
-async def play_start(message: types.Message):
+async def sent(message: types.Message):
     if message.chat.type == "private":
         recipient_id = await sqlite_db.check_tg_id_recipient(message.from_user.id)
         recipient = await sqlite_db.check_username_recipient(message.from_user.id)
@@ -68,12 +68,12 @@ async def play_start(message: types.Message):
 
 
 @dp.message_handler(commands=["help"])
-async def cmd_start(message: types.Message):
+async def cmd_help(message: types.Message):
     await bot.send_message(message.chat.id, text=dialog.help_text)
 
 
 @dp.message_handler(commands=["received"])
-async def cmd_start(message: types.Message):
+async def received(message: types.Message):
     await bot.send_message(message.from_user.id, text=dialog.received_from)
     recipient_id = await sqlite_db.check_tg_id_recipient(message.from_user.id)
     for i in range(len(recipient_id)):
