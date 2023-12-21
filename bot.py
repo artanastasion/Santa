@@ -45,12 +45,10 @@ async def play_start(message: types.Message):
 async def play_start(message: types.Message):
     if message.chat.type == "private":
         recipient = await sqlite_db.check_username_recipient(message.from_user.id)
-        str_recipient = ''
-        if len(str_recipient) == 0:
+        if not recipient:
             await bot.send_message(message.from_user.id, text="Ты еще не участвуешь в игре, тебе следует прислать /participate в чате со своими друзьями")
         else:
-            for i in range(len(recipient)):
-                str_recipient += (" @" + str(recipient[i]) + ",")
+            str_recipient = ', '.join(list(map(lambda x: f'@{x}', recipient)))
             text = dialog.get_recipient_text + str_recipient + "\nКогда ты будешь готов поднять настроение своему другу, пиши мне /sent"
             await bot.send_message(message.from_user.id, text=text)
 
@@ -60,14 +58,8 @@ async def play_start(message: types.Message):
     if message.chat.type == "private":
         recipient_id = await sqlite_db.check_tg_id_recipient(message.from_user.id)
         recipient = await sqlite_db.check_username_recipient(message.from_user.id)
-        str_recipient = ''
-        for i in range(len(recipient)):
-            str_recipient += (" @" + str(recipient[i]) + ",")
-
-        if len(recipient) > 1:
-            text = dialog.sent_text_to + "\n" + str_recipient + " теперь знают, что тайный Санта в ближайшем будущем отдаст подарок!"
-        else:
-            text = dialog.sent_text_to + "\n" + str_recipient + " теперь знает, что тайный Санта в ближайшем будущем отдаст подарок!"
+        str_recipient = ', '.join(list(map(lambda x: f'@{x}', recipient)))
+        text = dialog.sent_text_to + "\n" + str_recipient + f" теперь {'знают' if len(recipient) > 1 else 'знает'}, что тайный Санта в ближайшем будущем отдаст подарок!"
 
         await bot.send_message(message.from_user.id, text=text)
 
