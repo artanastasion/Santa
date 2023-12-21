@@ -32,7 +32,7 @@ async def cmd_start(message: types.Message):
 
 @dp.message_handler(commands=["play"])
 async def play_start(message: types.Message):
-    if message.from_user.id == 644724972 and message.chat.type == "group":
+    if message.from_user.username == bot_token.username and message.chat.type == "group":
         count = await sqlite_db.count_part(message.chat.id)
         await sqlite_db.start_play(count, message.chat.id)
         await message.reply(
